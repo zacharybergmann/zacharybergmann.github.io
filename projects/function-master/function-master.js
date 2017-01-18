@@ -127,8 +127,19 @@ function removeProperties(obj , strArray) {
     }
 }
 
-function dedup() {
-    
+function dedup(arrayWithMults) {
+    var outputArr = [];
+    for(let i = 0 ; i < arrayWithMults.length ; i++) {
+        for(let j = 0 ; j < outputArr.length ; j++) {
+            if(outputArr[j] === arrayWithMults[i]) {
+                break;
+            }
+            if (j === outputArr.length - 1 && outputArr[j] !== arrayWithMults[i]){
+                outputArr.push(arrayWithMults[i]);
+            }
+        }
+    }
+    return outputArr;
 }
 
 
