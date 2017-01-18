@@ -104,21 +104,23 @@ function nonFriends(name, listPeople) {
     }
     
     //now the case where personFriends has values
-    for (let i = 0 ; i < personFriends.length ; i++) {
-        for(let j = 0 ; j < listPeople.length ; j++) {
-            if(listPeople[j].name === personFriends[i]){
+    for (let i = 0 ; i < listPeople.length ; i++) {
+        for(let j = 0 ; j < personFriends.length ; j++) {
+            if(listPeople[i].name === personFriends[j] || listPeople[i].name === name) {
                 break;
             }
-            if(j === listPeople.length - 1 && listPeople[j].name !== personFriends[i]) {
-                outputNonFriends.push(personFriends[i]);
+            if(listPeople[i].name !== personFriends[j] && j === personFriends.length - 1) {
+                outputNonFriends.push(listPeople[i].name);
             }
         }
-    }    
+    }  
+    console.log(outputNonFriends);
     return outputNonFriends;
 } 
 
 function updateObject(obj, key, value) {
     obj[key] = value;
+    return obj;
 }
 
 function removeProperties(obj , strArray) {
@@ -127,19 +129,20 @@ function removeProperties(obj , strArray) {
     }
 }
 
-function dedup(arrayWithMults) {
-    var outputArr = [];
-    for(let i = 0 ; i < arrayWithMults.length ; i++) {
-        for(let j = 0 ; j < outputArr.length ; j++) {
-            if(outputArr[j] === arrayWithMults[i]) {
+function dedup(input) {
+    var output = [];
+    output.push(input[0]);
+    for(let i = 1 ; i < input.length ; i++) {
+        for(let j = 0 ; j < output.length ; j++) {
+            if(output[j] === input[i]) {
                 break;
             }
-            if (j === outputArr.length - 1 && outputArr[j] !== arrayWithMults[i]){
-                outputArr.push(arrayWithMults[i]);
+            if (j === output.length - 1 && output[j] !== input[i]){
+                output.push(input[i]);
             }
         }
     }
-    return outputArr;
+    return output;
 }
 
 
