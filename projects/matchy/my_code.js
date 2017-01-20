@@ -75,7 +75,7 @@ animals[0].friends = friends;
 // Step 1 //
 function search(animalName) {
     for(let i = 0 ; i < animals.length ; i++) {
-        if(animals[i].name === animalName) {
+        if(animals[i].name.toLowerCase() === animalName.toLowerCase()) {
             return animals[i];
         }
     }
@@ -85,7 +85,7 @@ function search(animalName) {
 // Step 2 //
 function edit(animalName, replacingObj) {
     for(let i = 0 ; i < animals.length ; i++) {
-        if(animals[i].name === animalName) {
+        if(animals[i].name.toLowerCase() === animalName.toLowerCase()) {
             animals[i] = replacingObj;
         }
     }
@@ -95,7 +95,7 @@ function edit(animalName, replacingObj) {
 function remove(animalName) {
     console.log(animals, "animals on line 81");
     for(let i = 0 ; i < animals.length ; i++) {
-        if(animals[i].name === animalName) {
+        if(animals[i].name.toLowerCase() === animalName.toLowerCase()) {
             animals.splice(i, 1);
         }
     }
@@ -105,7 +105,7 @@ function remove(animalName) {
 function create(newAnimalObj) {
     if(newAnimalObj.name.length > 0 && newAnimalObj.species.length > 0) {
         for(let i =0 ; i < animals.length ; i++) {
-            if(animals[i].name === newAnimalObj.name) {
+            if(animals[i].name.toLowerCase() === newAnimalObj.name.toLowerCase()) {
                 return 'failed';
             }
         }
