@@ -96,7 +96,7 @@ _.first = function(arr, num) {
         output.push(arr[i]);
     }
     return output;
-}
+};
 
 
 /** _.last()
@@ -128,7 +128,7 @@ _.last = function(arr, num) {
         output.unshift(arr[i]);
     }
     return output;
-}
+};
 
 
 /** _.each()
@@ -157,7 +157,7 @@ _.each = function (collection, action) {
             action(collection[key], key, collection);
         }
     }
-}
+};
 
 
 /** _.indexOf()
@@ -229,13 +229,9 @@ _.filter = function(arr, test) {
 */
 
 _.reject = function(arr, test) {
-    let output = [];
-    _.each(arr, function(value, position, collection) {
-        if(!(!!test(value, position, collection))) {
-            output.push(value);
-        }
+    return _.filter(arr, function(value, position, collection){
+        return !test(value, position, collection);
     });
-    return output;
 };
 
 
@@ -277,12 +273,14 @@ _.partition = function(arr, test) {
 */
 
 _.unique = function(arr) {
-    let output = [];
-    _.indexOf(arr, _.each(arr, function(value, position, collection) {
-        if(_.indexOf(output, val) !== -1) {
-            output.push(val);
-        }
-    }));
+    //create output array
+    //loop thru the array
+    //if unique, push to output array
+    //return the new array
+    let output = _.filter(arr, function(value, position, collection) {
+        return _.indexOf(arr, value) === position;
+    });
+    return output;
 };
 
 
@@ -302,6 +300,14 @@ _.unique = function(arr) {
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
 
+_.map = function(collection, action) {
+    let output = [];
+    _.each(collection, function(value, position, collection) {
+        output.push(action(value, position, collection));
+    });
+    return output;
+};
+
 
 /** _.pluck()
 * Arguments:
@@ -313,6 +319,12 @@ _.unique = function(arr) {
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
+
+_.pluck = function(arr, prop) {
+    return _.map(arr, function(obj, position, collection) {
+        return obj[prop];
+    });
+};    
 
 
 /** _.contains()
@@ -329,6 +341,10 @@ _.unique = function(arr) {
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+
+_.contains = function(arr, value){
+    return _.indexOf(arr, value) !== -1 ? true : false;
+};
 
 
 /** _.every()
@@ -352,6 +368,17 @@ _.unique = function(arr) {
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
 
+_.every = function(collection, action) {
+    //loop thru the collection with _.each
+    //conditional for the boolean
+    //check if fxn exists, if not handle evaluating elements truthy vs falsy 
+    //if fxn provided return true or false
+    if(arguments[1] === undefined) {
+        return _.indexOf(_.reject(collection, function(value, position, collection){return !!value;}), false) === -1 ? true : false;
+    }
+    return _.reject(collection, action).length > 0 ? false : true;
+};
+
 
 /** _.some()
 * Arguments:
@@ -374,6 +401,19 @@ _.unique = function(arr) {
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
 
+_.some = function(collection, action) {
+    //start looping 
+    //do action to every item
+    //edge cases
+    //return true or false
+    if(arguments[1] === undefined) {
+        return _.indexOf(_.filter(collection, function(value, position, collection) {
+            return !!value;
+        }), true) === -1 ? false : true;
+    }
+    return _.filter(collection, action).length > 0 ? true : false;
+};
+
 
 /** _.reduce()
 * Arguments:
@@ -394,6 +434,25 @@ _.unique = function(arr) {
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
 
+_.reduce = function(arr, action, seed) {
+    //loop thru elements in array. 
+    //use return from function as prev result for next element
+    console.log(arr);
+    var rollingResult;
+    if(seed === undefined) {
+        rollingResult = arr[0];
+        _.each(arr, function(value, index, collection) {
+            index === 0 ? rollingResult = rollingResult : rollingResult = action(rollingResult, value, index);
+        });
+    } else {
+        rollingResult = seed;
+        _.each(arr, function(value, index, collection){
+            rollingResult = action(rollingResult, value, index);
+        });
+    }
+    return rollingResult;    
+};
+
 
 /** _.extend()
 * Arguments:
@@ -409,6 +468,15 @@ _.unique = function(arr) {
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
+
+_.extend = function(obj1, obj2) {
+    _.each(arguments, function(obj, index, objs) {
+        _.each(obj, function(val, key, obj) {
+            obj1[key] = val;
+        });
+    });
+   return obj1; 
+};
 
 
 // This is the proper way to end a javascript library
