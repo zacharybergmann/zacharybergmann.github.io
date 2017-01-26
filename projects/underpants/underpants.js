@@ -78,7 +78,7 @@ _.typeOf = function(data) {
 *   1) What if <number> is negative?
 *   2) What if <number> is greater than <array>.length?
 * Examples:
-*   _.first(["a","b","c"], 1) -> "a"
+*   _.first(["a","b","c"], 1) -> ["a"]
 *   _.first(["a","b","c"], 2) -> ["a", "b"]
 *   _.first(["a", "b", "c"], "ponies") -> ["a"]
 */
@@ -273,10 +273,6 @@ _.partition = function(arr, test) {
 */
 
 _.unique = function(arr) {
-    //create output array
-    //loop thru the array
-    //if unique, push to output array
-    //return the new array
     let output = _.filter(arr, function(value, position, collection) {
         return _.indexOf(arr, value) === position;
     });
@@ -368,15 +364,11 @@ _.contains = function(arr, value){
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
 
-_.every = function(collection, action) {
-    //loop thru the collection with _.each
-    //conditional for the boolean
-    //check if fxn exists, if not handle evaluating elements truthy vs falsy 
-    //if fxn provided return true or false
-    if(arguments[1] === undefined) {
-        return _.indexOf(_.reject(collection, function(value, position, collection){return !!value;}), false) === -1 ? true : false;
+_.every = function(collection, test) {
+    if(test === undefined) {
+        test = _.identity;
     }
-    return _.reject(collection, action).length > 0 ? false : true;
+    return _.reject(collection, test).length > 0 ? false : true;
 };
 
 
@@ -401,17 +393,11 @@ _.every = function(collection, action) {
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
 
-_.some = function(collection, action) {
-    //start looping 
-    //do action to every item
-    //edge cases
-    //return true or false
-    if(arguments[1] === undefined) {
-        return _.indexOf(_.filter(collection, function(value, position, collection) {
-            return !!value;
-        }), true) === -1 ? false : true;
+_.some = function(collection, test) {
+    if(test === undefined) {
+        test = _.identity;
     }
-    return _.filter(collection, action).length > 0 ? true : false;
+    return _.filter(collection, test).length > 0 ? true : false;
 };
 
 
@@ -435,14 +421,11 @@ _.some = function(collection, action) {
 */
 
 _.reduce = function(arr, action, seed) {
-    //loop thru elements in array. 
-    //use return from function as prev result for next element
-    console.log(arr);
     var rollingResult;
     if(seed === undefined) {
         rollingResult = arr[0];
         _.each(arr, function(value, index, collection) {
-            index === 0 ? rollingResult = rollingResult : rollingResult = action(rollingResult, value, index);
+            rollingResult = index === 0 ? rollingResult : action(rollingResult, value, index);
         });
     } else {
         rollingResult = seed;
