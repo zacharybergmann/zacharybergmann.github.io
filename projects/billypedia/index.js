@@ -202,22 +202,44 @@ $(document).ready(function() {
         
         
 /******************** Create Billy's rider section in the page via a function and add *****************/
-        // var createTable = function(people){
-        //     var createRow = function(person){
-        //         var $row = $("<tr>");
-        //         var $nameFirst = $("<td>").text(person.nameFirst);
-        //         var $nameLast = $("<td>").text(person.nameLast);
-        //         $row.append($nameFirst);
-        //         $row.append($nameLast);
-        //         return $row;
-        //     }
-        //     var $table = $("<table>");
-        //     var $rows = people.map(createRow);
-        //     $table.append($rows);
-        //     return $table;
-        // };
-        // let people = [{nameFirst: "John", nameLast: "Doe"}, {nameFirst: "Dick", nameLast: "Jones"}]
-        // createTable(people).appendTo("body");
+        var createTable = function(gears){
+            var createRow = function(gear){
+                var $row = $("<tr>")
+                    .css('border', '2px solid black')
+                    .css('padding', '5px 5px 5px 5px');
+                var $type = $("<td>").text(gear.type)
+                    .css('border', '2px solid black')
+                    .css('text-align', 'center');
+                var $desc = $("<td>").text(gear.desc)
+                    .css('border', '2px solid black')
+                    .css('text-align', 'center');
+                $row.append($type);
+                $row.append($desc);
+                return $row;
+            }
+            var $table = $("<table>")
+                .css('border', '2px solid black')
+                .css('width', '500px');
+            var $rows = gears.map(createRow);
+            $table.append($rows);
+            $table.attr('id', 'billy-rider-table')
+                .css('border-collapse', 'collapse');
+            return $table;
+        };
+        
+        var $riderTable = createTable(data.rider)
+        
+        var $headerRider = $('<header>')
+            .text('Billy\'s Rider')
+            .css('font-size', '1.5em')
+            .css('margin', '50px 0px 20px 0px')
+            .css('text-align', 'center');
+        
+        $headerRider.appendTo('#section-quotes');
+        
+        $riderTable.appendTo("#section-quotes");
+        
+        
         
         
         
