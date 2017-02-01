@@ -8,43 +8,49 @@ $(document).ready(function() {
         
         // EXAMPLE: Looping over top rated recordings; replace with your code //
         
-        
+        /********************Adding Top Recordings to the sidebar***********************/
         //Creating list items and return in array
         let topRated = _.map(data.discography.topRated, function(album, index, albums){
             return $('<li>')
                 .text(album.title)
                 .css('list-style', 'none')
-                .css('padding', '3px 3px 3px 0px');
+                .css('padding', '3px 3px 3px 0px')
+                .appendTo('#list-top-rated');
         });
         
-        //iterate thru list items array and add to the DOM
-        _.each(topRated, function(li, index, lis) {
-            $('#list-top-rated').append(li);
-        });
         
         //Fix the 40px Chrom padding-left issue and add id
-        $('ul').attr('id', 'z-top-rated').css('padding-left', '5px');
+        $('ul').css('padding-left', '5px');
         
         
-        //now lets handle general recordings
+/***************Add an album image to the sidebar for the top rated Billy albums***********/
+        //////////////////////////
+        $('<img>')
+            .attr('id', 'top-rated-image')
+            .attr('src', './images/album/voice-in-the-night.jpg')
+            .prependTo('#list-top-rated');
+            
+        
+        
+        /**************Create the list of general recordings in the sidebar************/
         //first, create the section tag
         const $sectionGenRecs = $('<section>')
             .attr('id', 'section-recordings');
             
-        //next make a ul tag to go inside the section tag    
+        //next make a ul tag to go inside the section tag and append it   
         const $ulGenRecs = $('<ul>')
             .attr('id', 'list-recordings')
-            .css('padding-left', '5px');
+            .css('padding-left', '5px')
+            .appendTo($sectionGenRecs);
         
-        //put the ul tag inside the section tag    
-        $sectionGenRecs.append($ulGenRecs);
         
         //make all of the styled li from the general recordings info, put in an array
-        const $arrayGenRecLi = _.map(data.discography.recordings, function(album, index, albums){
+        _.map(data.discography.recordings, function(album, index, albums){
             return $('<li>')
                 .css('list-style', 'none')
                 .attr('class', 'recording')
                 .css('padding-bottom', '10px')
+                .css('width', '200px')
                 .append($('<div>')
                     .attr('class', 'title')
                     .text(function(){return "Title: " + album.title;})
@@ -61,19 +67,14 @@ $(document).ready(function() {
                     .attr('class', 'year')
                     .text(function(){return "Year: " + album.year;})
                     .css('color', '#3223B8')
-                );    
-        });
-        
-        //add all of the general recordings to the ul
-        _.each($arrayGenRecLi, function(albumObj, index, albumObjs){
-            $ulGenRecs.append(albumObj);
+                ).appendTo($ulGenRecs);    
         });
         
         //put the section into place in the DOM
         $('#sidebar').append($sectionGenRecs);
         
-        
-        //Image for Top Rated
+
+/*****Add an image for the Top Rated albums, change with click on new title***************/
         
         //Create a div tag for image for Top Rated
         const $divImg = $('<div>')
@@ -93,10 +94,48 @@ $(document).ready(function() {
         $('#section-recordings').prepend($divImg);
         
         
+/***********Make the Billy main image change to the next image on every click*************/
+        
+        //make click event handler on main billy image and have it rotate thru the images
+        $('#image-billy').on('click', function(event){
+            $('#image-billy')
+                .attr('width', '200px')
+                .attr('height', '200px');
+            
+            let currentImageNum = $('#image-billy')[0].currentSrc.split('/billypedia')[1].split("-")[1].split(".")[0];
+            currentImageNum < 3 ? currentImageNum++ : currentImageNum = 0;
+            let newFileExt = "./images/billy/billy-" + currentImageNum + ".jpg";
+ 
+            return $('#image-billy')
+                .attr('src', newFileExt)
+                .fadeIn('slow');
+        });
+        
+/*******Every time that a general record is clicked, change the image to record clicked**************/
+        //maybe also add mouseover for all lis in both recording sections
+        //how to create finger instead of I for mouse to show clickable
+        $('#list-recordings li').on('click', function(event){
+            let albumFileName = $(event.currentTarget)[0]
+                .innerHTML.split('Title: ')[1]
+                .split('</div>')[0]
+                .toLowerCase()
+                .replace("'", "")
+                .replace(/\s+/gi, "-") + ".jpg";
+            let fullFilePath = './images/album/' + albumFileName;    
+            $('#recording-image').attr('src', fullFilePath);    
+        });
         
         
-        
-        
+/*************Every time that a top record is clicked, change the image to record clicked************/
+        $('#list-top-rated li').on('click', function(event){
+            let albumFileName = $(event.currentTarget)[0]
+                .innerHTML
+                .toLowerCase()
+                .replace("'", "")
+                .replace(/\s+/gi, "-") + ".jpg";
+            let fullFilePath = './images/album/' + albumFileName;    
+            $('#top-rated-image').attr('src', fullFilePath);
+        });
         
         
         // YOUR CODE ABOVE HERE //
