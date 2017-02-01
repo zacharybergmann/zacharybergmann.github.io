@@ -15,6 +15,8 @@ $(document).ready(function() {
                 .text(album.title)
                 .css('list-style', 'none')
                 .css('padding', '3px 3px 3px 0px')
+                .css('cursor', 'pointer')
+                .css('border', '3px outset gold')
                 .appendTo('#list-top-rated');
         });
         
@@ -28,7 +30,22 @@ $(document).ready(function() {
         $('<img>')
             .attr('id', 'top-rated-image')
             .attr('src', './images/album/voice-in-the-night.jpg')
+            .css('border', '2px solid black')
             .prependTo('#list-top-rated');
+            
+            
+            
+/************** Style the section containing Billy top rated albums *********************/
+        $('#section-top-rated')
+            .css('margin-top', '60px')
+            .css('background-color', '#fff377')
+            .css('border', '10px outset #fdce1d')
+            .css('padding-top', '10px')
+            .css('margin-bottom', '0px')
+            .css('text-align', 'center');
+            
+        $('#header-top-rated')
+            .css('text-align', 'center');
             
         
         
@@ -49,24 +66,25 @@ $(document).ready(function() {
             return $('<li>')
                 .css('list-style', 'none')
                 .attr('class', 'recording')
-                .css('padding-bottom', '10px')
-                .css('width', '200px')
+                .css('padding-bottom', '15px')
+                .css('cursor', 'pointer')
+                .css('width', '210px')
                 .append($('<div>')
                     .attr('class', 'title')
                     .text(function(){return "Title: " + album.title;})
-                    .css('color', '#3223B8')
+                    .css('color', 'black')
                 ).append($('<div>')
                     .attr('class', 'artist')
                     .text(function(){return "Artist: " + album.artist;})
-                    .css('color', '#3223B8')
+                    .css('color', 'black')
                 ).append($('<div>')
                     .attr('class', 'release')
                     .text(function(){return "Release: " + album.release;})
-                    .css('color', '#3223B8')
+                    .css('color', 'black')
                 ).append($('<div>')
                     .attr('class', 'year')
                     .text(function(){return "Year: " + album.year;})
-                    .css('color', '#3223B8')
+                    .css('color', 'black')
                 ).appendTo($ulGenRecs);    
         });
         
@@ -74,14 +92,14 @@ $(document).ready(function() {
         $('#sidebar').append($sectionGenRecs);
         
 
-/*****Add an image for the Top Rated albums, change with click on new title***************/
+/*****Add an image for the General Recordings albums, change with click on new title***************/
         
-        //Create a div tag for image for Top Rated
+        //Create a div tag for image for General Recordings
         const $divImg = $('<div>')
             .attr('id', 'image-container-recording')
             .attr('class', 'image-container');
         
-        //Create a image tag for the Top Rated Image
+        //Create a image tag for the General Recordings Image
         const $imgTag = $('<img>')
             .attr('id', 'recording-image')
             .attr('class', 'image')
@@ -136,6 +154,71 @@ $(document).ready(function() {
             let fullFilePath = './images/album/' + albumFileName;    
             $('#top-rated-image').attr('src', fullFilePath);
         });
+        
+/*************Make the buttons depress upon mousedown, up on mouseup **************************/
+        $('#list-top-rated li').on('mousedown', function(event){
+            $(event.currentTarget)
+                .css('border', '3px inset gold');
+        });
+        
+        $('#list-top-rated li').on('mouseup', function(event){
+            $(event.currentTarget)
+                .css('border', '3px outset gold');
+        });
+        
+        
+/******************** Edit section and add header to the general recordings section ****************************/
+        $('#section-recordings')
+            .css('margin-top', '30px')
+            .css('border', '10px outset #c20f0f')
+            .css('text-align', 'center')
+            .css('background-color', '#e33f3f');
+        
+        var genRecsHeader = $('<header>')
+            .attr('id', 'header-general-recordings')
+            .text('General Recordings')
+            .css('margin-top', '10px')
+            .css('margin-bottom', '20px');
+            
+         $('#section-recordings').prepend(genRecsHeader);  
+         
+         
+         
+/******************** Make general recording li all outset *************************************/
+        $('#list-recordings li')
+            .css('border', '3px outset #d42222');
+            
+            
+/******************* Add event handlers for the li items in general recordings ****************/
+        $('#list-recordings li').on('mousedown', function(event){
+            $(event.currentTarget)
+                .css('border', '3px inset #d42222');
+        });
+        
+        $('#list-recordings li').on('mouseup', function(event){
+            $(event.currentTarget)
+                .css('border', '3px outset #d42222');
+        });
+        
+        
+/******************** Create Billy's rider section in the page via a function and add *****************/
+        // var createTable = function(people){
+        //     var createRow = function(person){
+        //         var $row = $("<tr>");
+        //         var $nameFirst = $("<td>").text(person.nameFirst);
+        //         var $nameLast = $("<td>").text(person.nameLast);
+        //         $row.append($nameFirst);
+        //         $row.append($nameLast);
+        //         return $row;
+        //     }
+        //     var $table = $("<table>");
+        //     var $rows = people.map(createRow);
+        //     $table.append($rows);
+        //     return $table;
+        // };
+        // let people = [{nameFirst: "John", nameLast: "Doe"}, {nameFirst: "Dick", nameLast: "Jones"}]
+        // createTable(people).appendTo("body");
+        
         
         
         // YOUR CODE ABOVE HERE //
