@@ -249,3 +249,17 @@ $(document).ready(function() {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+//what does this mean for event handler
+//$(''.top-rated').on('click', {id: 'image-container-top-rated'}, replaceImage);
+//maybe look more at on API for jQuery
+//$imageContainer = $(`#{event.data.id}`)

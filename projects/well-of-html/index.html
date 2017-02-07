@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/custom.css" type="text/css" />
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/notes/notes.js"></script>
+    <title>A Well of HTML</title>
+    <style type="text/css">
+        
+    </style>
+</head>
+
+<body>
+    <div id="container" class="container">
+        <!-- ALL YOUR MARKUP GOES BELOW HERE -->
+        <a href= "https://en.wikipedia.org/wiki/Search_tree">Binary Search Tree Wiki</a>
+        <img src="./img/apple-in-grass.jpg" />
+        <h1>This is the largest header- h1</h1>
+        <h2>This is an h2 header</h2>
+        <h3>H3 header here!</h3>
+        <h4>H4 away!</h4>
+        <h5>High h5</h5>
+        <h6>This is h6, the <small>smallest</small> header tag</h6>
+        
+        <p><b>Yesterday</b> I learned a bit about MeteorJS and Angular2. Meteor allows Angular2 to be used together with it when the framework is downloaded. There are also <em>multiple</em> videos and walkthroughs to get you through the basics of Meteor with Angular2. I am hoping that I have a bit of time to learn more about both of these frameworks so that I can become a better programmer.</p>
+        
+        <p><b>Today</b> I plan to study more on the observer pattern and jQuery. I also want to read about AJAX and try to find a way to implement it in my final project. That seems like it would be a good way to <i>really</i> finish my project from Bootcamp with a <strong>bang</strong>!</p>
+        
+        <div id="bootstrap-ex" class="container-fluid">
+            <div class="col-md-3">
+                <h2>Things to do Today</h2>
+                <ul>
+                    <li>Read Chapter on AJAX</li>
+                    <li>Read article Stephanie sent me regarding data transmission/copyrighting in the digital age</li>
+                    <li>Practice using AJAX a bit to get familiar</li>
+                    <li>Write a new event handler to handle multiple events for multiple tags in a single event handler</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h2>Chores to do this week</h2>
+                <ol>
+                    <li>Go to Costco</li>
+                    <li>Go to Target</li>
+                    <li>Get cat food</li>
+                    <li>Clean the apartment</li>
+                </ol>
+            </div>
+            <div id= "table-div" class="col-md-5">
+                <table id="table">
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Number of Credits</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>Zachary Bergmann</td>
+                        <td>17</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Stephanie Crum</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>John Friesen</td>
+                        <td>15</td>
+                    </tr>
+                </table>
+            </div>    
+        </div>
+        
+        <form id="form-example">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Name"/>
+            </div>
+            <div>
+                <label for="sport">Sport:</label>
+                <select id="sportname">
+                    <option disable selected value>-- Select a sport --</option>
+                    <option value = 1>Basketball</option>
+                    <option value = 2>Baseball</option>
+                    <option value = 3>Hockey</option>
+                    <option value = 4>Skiing</option>
+                    <option value = 5>Rock Climbing</option>
+                </select>
+            </div>
+            <div>
+                <label for="other-interested-in-sports">What other sports are you interested in us adding?</label>
+                <input type="checkbox" name="Baseball">Biathalon</input>
+                <input type="checkbox" name="Baseball">Barcurling</input>
+                <input type="checkbox" name="Baseball">Skiball</input>
+                <input type="checkbox" name="Baseball">Bochiball</input>
+            </div>
+            <div>
+                <label for="contract">Do you agree to the terms and conditions?</label>
+                <input type="radio" name="yes-contract">Yes</input>
+                <input type="radio" name="no-contract">No</input>
+            </div>
+            <div>
+                <button type="submit">Submit Application</button>
+            </div>
+        </form>
+        
+        <div>
+            <h1>Some random header</h1>
+        </div>
+        <div>
+            <p>An interesting paragraph</p>
+        </div>
+        <div>
+            <h6>A very small header</h6>
+        </div>
+        <div>
+            <img src="./img/black-currant.jpg" />
+        </div>
+        <div class="use-flexbox">
+            <div>
+                <img src="http://media02.hongkiat.com/programming-jokes/joke-semi-colon.jpg" width = "400" />
+            </div>
+            <br />
+            <div>
+                <iframe width="420" height="315" src="https://youtu.be/EbS6XABrUsk?controls=1" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        
+        
+        
+        <!-- ALL YOUR MARKUP GOES ABOVE HERE -->
+    </div>
+    <script>
+        $(function () {
+            window.opspark.notes.show();
+        });
+    </script>
+</body>
+
+</html>

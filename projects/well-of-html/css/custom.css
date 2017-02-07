@@ -1,0 +1,23 @@
+.use-flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#bootstrap-ex {
+    display: flex;
+    flex-direction: row;
+}
+
+#table-div {
+    margin-top: 30px;
+}
+
+#table {
+     border: 3px solid black;
+     padding: 4px 4px 4px 4px;
+}
+
+td, th {
+    text-align: center;
+}
