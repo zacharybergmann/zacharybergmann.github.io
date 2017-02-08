@@ -1,9 +1,18 @@
+#co-name-top{
+    text-decoration: none;
+    color: white;
+    font: 60px arial;
+}
+
 nav {
     background-color: #89063D;
     background: linear-gradient(#0C5939 ,#68C49D);
-    color: white;
     height: 6em;
     justify-content: center;
+}
+
+#shop-cart-icon {
+    color: white;
 }
 
 #search-bar-input {
@@ -15,6 +24,7 @@ nav {
 
 #search-bar-button-div {
     text-align: center;
+    margin-top: 15px;
 }
 
 .modal {

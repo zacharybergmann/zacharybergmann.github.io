@@ -4,7 +4,8 @@ $(function () {
   $.getJSON('./data/product.json', function(data){
     //start working here
     
-    /********** Add all items to the page ******************/
+    /********** Add al l items to the page ******************/
+    
     const prodArray = data.map(function(product, index, products){
       
       //create outer container div tag for whole product
@@ -126,26 +127,46 @@ $(function () {
       return $productWrapperDiv;
     });
     
-    /********************** Make some event listeners ********************/
+    /********************** Search Function ********************/
     
-    //event listener for the search bar enter pressed
+    //case user clicks to Search! button
+    $('#search-button').on('click', function(event){
+      var searchFor = $('#search-bar-input').val();
+        var re = new RegExp(searchFor.toLowerCase(), 'gi');
+        //remove all items from the DOM
+        $('main').empty();
+        data.map(function(product, index, products){
+          //must loop over data b/c type not in the DOM
+          if(product.desc.toLowerCase().match(re) !== null || product.type.toLowerCase().match(re) !== null){
+            $('main').append(prodArray[index]);
+          }
+        });
+    });
+    
+    
+    //case user hits enter when the Search bar in focus
     $('#search-bar-input').on('keyup', function(event){
       if($('search-bar-input:focus') && (event.keyCode === 13)){
         //search thru the array prodArray
         //detatch each item that does not meet the description
         var searchFor = $(this).val();
-        //search for products via selector
-        //search thru all of them for the desired word in various properties
-        //remove those that do not meet the description
-        $('main').detach();
-        prodArray.map(function(product, index, products){
-          if(product) {
-              //do something
-            
-          } 
+        var re = new RegExp(searchFor.toLowerCase(), 'gi');
+        //remove all items from the DOM
+        $('main').empty();
+        data.map(function(product, index, products){
+          //must loop over data b/c type not in the DOM
+          if(product.desc.toLowerCase().match(re) !== null || product.type.toLowerCase().match(re) !== null){
+            $('main').append(prodArray[index]);
+          }
         });
       }
     });
+    
+    
+    /*********************** Filter Results **************************/
+    
+    
+    
     
     //event listener for user clicking on the images for a larger view
     //this uses a modal that is created and can be closed when done
@@ -201,8 +222,7 @@ $(function () {
       
       //console.log(newTarget);
       
-      
-      //TODO: need to get the x box to close the modal
+    
       //TODO: maybe downsize the image for the modal
       //TODO: need to remove the modal after click outside of the box or click x box
       //Gradient header with CSS
@@ -218,14 +238,6 @@ $(function () {
     
     
     
-    
-    /*********************** Search Function *************************/
-    
-  // $(document).keyup(function (event) {
-  //   if ($("#search-bar-input:focus") && (event.keyCode === 13)) {
-  //     alert('ya!');
-  //   }
-  // });
     
     
     
