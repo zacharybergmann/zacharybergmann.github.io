@@ -1,13 +1,18 @@
 #co-name-top{
     text-decoration: none;
     color: white;
-    font: 60px arial;
+    font: 30px arial;
+    width: 350px;
+}
+
+#co-name-div-cont {
+    margin: 40px 0px 0px 30px;
 }
 
 nav {
-    background-color: #89063D;
     background: linear-gradient(#0C5939 ,#68C49D);
-    height: 6em;
+    background: #13273a;
+    height: 8em;
     justify-content: center;
 }
 
@@ -24,7 +29,16 @@ nav {
 
 #search-bar-button-div {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 40px;
+}
+
+#filter-results-form {
+    border-width: 1px;
+    border-color: #ddd;
+}
+
+hr {
+    border: 1px solid #d0d7e2;
 }
 
 .modal {
