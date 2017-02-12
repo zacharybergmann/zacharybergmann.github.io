@@ -10,37 +10,90 @@ $(function () {
     var prodsObjs;
     var curFiltersApplied = [];
     var curFirmFilters = [];
+    var firmFilters = {
+                        type: [],
+                        price: [],
+                        manufacturer: []
+                      };
+    var searchFilters;                  
+                      
+    
     
     
     /********************************** createProducts function **************************************/ 
     
-    function filterProdsOnScreen(arr, prop, value){
-      if(typeof value === 'number'){
-        return arr.filter(function(curObj){return curObj[prop] < value;});
-      }  
-      return arr.map(function(curObj){
-        var arrOfObjsWFilter = [];
-        curObj[prop].split(" ").forEach(function(word){
-          if(word.toLowerCase() === value.toLowerCase()) arrOfObjsWFilter.push(curObj);
-        });
-        return _.uniq(arrOfObjsWFilter);
-      }).reduce(function(prevResult, curVal){return prevResult.concat(curVal)}, []);
+    function filterProdsOnScreen(data, searchStr){
+      var firmFiltered = filterByType(filterByManufacturer(data, firmFilters.manufacturer), firmFilters.type);
+      var firmFiltered2 = filterByPrice(firmFiltered, firmFilters.price);
+      if(searchStr) return filterBySearch100(firmFiltered2, searchStr);
+      return firmFiltered2;
+    }
+    
+    function filterBySearch100(data, searchStr) {
+      if(searchStr === undefined) {
+        if(searchFilters !== undefined) {
+          searchStr === searchFilters;
+        } else {
+          return data
+        }  
+      }
+      searchFilters = searchStr;
+      var splitSearch = _.uniq(searchStr.toLowerCase().split(" "));
+      return data.map(function(curProd){
+        var hitWords = [];
+        var matches = [];
+        if(curProd.desc !== "") hitWords = hitWords.concat(curProd.desc.toLowerCase().split(" "))
+        if(curProd.specs != []) {
+          curProd.specs.forEach(function(strSpec){
+            hitWords = hitWords.concat(strSpec.toLowerCase().split(" "));
+          });
+        }  
+        hitWords = _.uniq(hitWords);
+        var searchStuff = splitSearch.map(function(searchWord){
+          return hitWords.filter(function(hitWord){
+            return hitWord === searchWord;
+          })
+        }).reduce(function(prev, curVal){return prev.concat(curVal);}, []);
+        if(searchStuff.length === splitSearch.length) return curProd;
+        return null;
+      }).filter(function(val){return val !== null});
+    }
+    
+    function filterBySearch50() {
+      
+    }
+    
+    function filterByManufacturer(data, manufArr) {
+      if(manufArr.length === 0) return data;
+      if(manufArr.length > 1) return [];
+      return data.map(function(curProd){
+          var re = new RegExp(_.first(manufArr), 'i');
+          if(curProd.desc.match(re) !== null) return curProd;
+          return null;
+      }).filter(function(val){return val !== null;});
+    }
+    
+    function filterByType(data, typeArr) {
+      if(typeArr.length === 0) return data;
+      if(typeArr.length > 1) return [];
+      return data.filter(function(curProd){
+        return curProd.type === _.first(typeArr);
+      });
+    }
+    
+    function filterByPrice(data, priceArr) {
+      if(priceArr.length === 0) return data;
+      if(priceArr.length > 0) {
+        var smallestPrice = priceArr.reduce(function(prev, curVal){
+          return prev === null || curVal < prev ? curVal : prev;
+        }, null);
+      } 
+      return data.filter(function(curProd){return curProd.price < smallestPrice;});
     }
     
     
-    function createProducts(jsonParsedData, arrFilterVals){
-      //hold an object static and loop thru the filters
-      //if a match, return that object to output array
-      prodsObjs = jsonParsedData.map(function(prod, ind, prods){
-        if(arrFilterVals === undefined || arrFilterVals.length === 0) return prod;  //prod is truthy
-        return arrFilterVals.reduce(function(prevResult, curVal, index){
-          var re = new RegExp(curVal.toLowerCase(), 'gi');
-          return (prod.desc.toLowerCase().match(re) !== null || prod.type.toLowerCase().match(re) !== null) && prevResult !== 0 ? prod : 0;
-        }, 1);
-      }).filter(function(curValue){return curValue !== 0});
-      
-      
-      var prodsInHTML = prodsObjs.map(function(product, index, products) {
+    function createProducts(data){
+      var prodsInHTML = data.map(function(product, index, products) {
         
         //create outer container div tag for whole product
         var $productWrapperDiv = $('<div>')
@@ -256,10 +309,9 @@ $(function () {
     
     //case user clicks to Search! button
     $('#search-button').on('click', function(event){
-      var searchFor = $('#search-bar-input').val();
-      curFiltersApplied = searchFor.split(" ");
+      var searchFor = $('#search-bar-input').val().trim();
       $('#product-contents-section').empty();
-      createProducts(data, curFiltersApplied);
+      createProducts(filterProdsOnScreen(data, searchFor));
     });
     
     
@@ -268,10 +320,9 @@ $(function () {
       if($('search-bar-input:focus') && (event.keyCode === 13)){
         //search thru the array prodArray
         //detatch each item that does not meet the description
-        var searchFor = $(this).val();
-        curFiltersApplied = searchFor.split(" ");
+        var searchFor = $(this).val().trim();
         $('#product-contents-section').empty();
-        createProducts(data, curFiltersApplied);
+        createProducts(filterProdsOnScreen(data, searchFor));
       }
     });
     
@@ -284,92 +335,103 @@ $(function () {
       //if checkbox now unchecked, remove that filter from the array and call the main fxn
       $('#product-contents-section').empty();
       if($('#samsung-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'desc', 'samsung'));
+        firmFilters.manufacturer.push('samsung');
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.manufacturer = firmFilters.manufacturer.filter(function(manufVal){return manufVal !== 'samsung'});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#apple-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#apple-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'desc', 'apple'));
+        firmFilters.manufacturer.push('apple');
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.manufacturer = firmFilters.manufacturer.filter(function(manufVal){return manufVal !== 'apple'});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#phone-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#phone-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'type', 'phone'));
+        firmFilters.type.push('phone');
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.type = firmFilters.type.filter(function(typeVal){return typeVal !== 'phone'});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#case-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#case-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'type', 'case'));
+        firmFilters.type.push('case');
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.type = firmFilters.type.filter(function(typeVal){return typeVal !== 'case'});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#under-50-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#under-50-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'price', 50));
+        firmFilters.price.push(50);
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 50});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#under-100-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#under-100-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'price', 100));
+        firmFilters.price.push(100);
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 100});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#under-200-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#under-200-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'price', 200));
+        firmFilters.price.push(200);
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 200});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#under-500-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#under-500-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'price', 500));
+        firmFilters.price.push(500);
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 500});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
     $('#under-600-checkbox').on('click', function(event){
       $('#product-contents-section').empty();
       if($('#under-600-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'price', 600));
+        firmFilters.price.push(600);
+        createProducts(filterProdsOnScreen(data));
       } else {
-        createProducts(data, curFiltersApplied);
+        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 600});
+        createProducts(filterProdsOnScreen(data));
       }
     });
     
-    $('#case-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#case-checkbox').is(':checked')){
-        createProducts(filterProdsOnScreen(prodsObjs, 'type', 'case'));
-      } else {
-        createProducts(data, curFiltersApplied);
-      }
-    });
+    
     
     
     
@@ -377,10 +439,16 @@ $(function () {
     
     $('#clear-filter-button').on('click', function(event){
       curFiltersApplied = [];
+      searchFilters = [];
+      firmFilters = {
+                      type: [],
+                      price: [],
+                      manufacturer: []
+                    };
       $('#search-bar-input').val("");
       $('#product-contents-section').empty();
       $('main input').attr('checked', false);
-      createProducts(data);
+      createProducts(filterProdsOnScreen(data));
     });
     
     
