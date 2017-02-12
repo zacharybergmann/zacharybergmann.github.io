@@ -25,7 +25,27 @@ $(function () {
     function filterProdsOnScreen(data, searchStr){
       var firmFiltered = filterByType(filterByManufacturer(data, firmFilters.manufacturer), firmFilters.type);
       var firmFiltered2 = filterByPrice(firmFiltered, firmFilters.price);
-      if(searchStr) return filterBySearch100(firmFiltered2, searchStr);
+      if(searchStr) {
+        var firmFilter3 = filterBySearch100(firmFiltered2, searchStr);
+        if(firmFilter3.length > 0) {
+          return firmFilter3;
+        } else {
+          var $h2 = $('<h3>')
+            .text('No Results For This Search!')
+            .css('text-align', 'center');
+          var $h4 = $('<h4>')
+            .text('Here are some similar results to your search...')
+            .css('text-align', 'center');
+          $('#product-contents-section')
+            .append($h2);
+          $('#product-contents-section').append($('<br>'));  
+          $('#product-contents-section')
+            .append($h4);
+          $('#product-contents-section').append($('<br>')); 
+          $('#product-contents-section').append($('<br>')); 
+          return filterBySearch50(firmFiltered2, searchStr);  
+        }  
+      }  
       return firmFiltered2;
     }
     
@@ -43,7 +63,7 @@ $(function () {
         var hitWords = [];
         var matches = [];
         if(curProd.desc !== "") hitWords = hitWords.concat(curProd.desc.toLowerCase().split(" "))
-        if(curProd.specs != []) {
+        if(curProd.specs.length !== 0) {
           curProd.specs.forEach(function(strSpec){
             hitWords = hitWords.concat(strSpec.toLowerCase().split(" "));
           });
@@ -59,9 +79,37 @@ $(function () {
       }).filter(function(val){return val !== null});
     }
     
-    function filterBySearch50() {
-      
+    
+    function filterBySearch50(data, searchStr) {
+      if(searchStr === undefined) {
+        if(searchFilters !== undefined) {
+          searchStr === searchFilters;
+        } else {
+          return data
+        }  
+      }
+      searchFilters = searchStr;
+      var splitSearch = _.uniq(searchStr.toLowerCase().split(" "));
+      return data.map(function(curProd){
+        var hitWords = [];
+        var matches = [];
+        if(curProd.desc !== "") hitWords = hitWords.concat(curProd.desc.toLowerCase().split(" "))
+        if(curProd.specs.length !== 0) {
+          curProd.specs.forEach(function(strSpec){
+            hitWords = hitWords.concat(strSpec.toLowerCase().split(" "));
+          });
+        }  
+        hitWords = _.uniq(hitWords);
+        var searchStuff = splitSearch.map(function(searchWord){
+          return hitWords.filter(function(hitWord){
+            return hitWord === searchWord;
+          })
+        }).reduce(function(prev, curVal){return prev.concat(curVal);}, []);
+        if(searchStuff.length >= splitSearch.length / 2) return curProd;
+        return null;
+      }).filter(function(val){return val !== null});
     }
+    
     
     function filterByManufacturer(data, manufArr) {
       if(manufArr.length === 0) return data;
@@ -430,11 +478,6 @@ $(function () {
         createProducts(filterProdsOnScreen(data));
       }
     });
-    
-    
-    
-    
-    
     
     
     $('#clear-filter-button').on('click', function(event){
