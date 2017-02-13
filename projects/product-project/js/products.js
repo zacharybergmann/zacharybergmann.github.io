@@ -15,7 +15,7 @@ $(function () {
                         price: [],
                         manufacturer: []
                       };
-    var searchFilters;                  
+    var searchFilters = [];                  
                       
     
     
@@ -26,8 +26,29 @@ $(function () {
       var firmFiltered = filterByType(filterByManufacturer(data, firmFilters.manufacturer), firmFilters.type);
       var firmFiltered2 = filterByPrice(firmFiltered, firmFilters.price);
       if(searchStr) {
+        searchFilters = searchFilters.concat(searchStr.toLowerCase().split(' '));
         var firmFilter3 = filterBySearch100(firmFiltered2, searchStr);
         if(firmFilter3.length > 0) {
+          return firmFilter3;
+        } else {
+          var $h2 = $('<h3>')
+            .text('No Results For This Search!')
+            .css('text-align', 'center');
+          var $h4 = $('<h4>')
+            .text('Here are some similar results to your search...')
+            .css('text-align', 'center');
+          $('#product-contents-section')
+            .append($h2);
+          $('#product-contents-section').append($('<br>'));  
+          $('#product-contents-section')
+            .append($h4);
+          $('#product-contents-section').append($('<br>')); 
+          $('#product-contents-section').append($('<br>')); 
+          return filterBySearch50(firmFiltered2, searchStr);  
+        }  
+      } else if (searchFilters.length !== 0) {
+          firmFilter3 = filterBySearch100(firmFiltered2, searchFilters.join(' ')); 
+          if(firmFilter3.length > 0) {
           return firmFilter3;
         } else {
           var $h2 = $('<h3>')
@@ -52,12 +73,12 @@ $(function () {
     function filterBySearch100(data, searchStr) {
       if(searchStr === undefined) {
         if(searchFilters !== undefined) {
-          searchStr === searchFilters;
+          searchStr = searchFilters.join(' ');
         } else {
-          return data
+          return data;
         }  
       }
-      searchFilters = searchStr;
+      searchFilters = searchStr.split(' ');
       var splitSearch = _.uniq(searchStr.toLowerCase().split(" "));
       return data.map(function(curProd){
         var hitWords = [];
@@ -83,12 +104,12 @@ $(function () {
     function filterBySearch50(data, searchStr) {
       if(searchStr === undefined) {
         if(searchFilters !== undefined) {
-          searchStr === searchFilters;
+          searchStr = searchFilters.join(' ');
         } else {
           return data
         }  
       }
-      searchFilters = searchStr;
+      searchFilters = searchStr.split(' ');
       var splitSearch = _.uniq(searchStr.toLowerCase().split(" "));
       return data.map(function(curProd){
         var hitWords = [];
@@ -161,6 +182,7 @@ $(function () {
         var $thumbnailImg = $("<img>")
           .attr("src", imgPath)
           .attr('class', 'product')
+          .attr('class', 'img-responsive')
           .css('max-width', '160px')
           .css('max-height', '160px')
           .css('width', 'auto')
@@ -378,108 +400,35 @@ $(function () {
     
     /******************************** Filter Results Event Handlers *************************************/
     
-    $('#samsung-checkbox').on('click', function(event){
-      //if checkbox is now checked, push that filter value to the array of filter, then call the main fxn
-      //if checkbox now unchecked, remove that filter from the array and call the main fxn
+    //handle all checkbox changes
+    $('#filter-results-form :checkbox').on('click', function(event){
+      var eventId = $(event.target).attr('id');
+      var filterWordToApply = eventId.split('#')[0].split('-')[0];
       $('#product-contents-section').empty();
-      if($('#samsung-checkbox').is(':checked')){
-        firmFilters.manufacturer.push('samsung');
+      if($('#' + eventId).is(':checked')) {
+        if(filterWordToApply === 'samsung' || filterWordToApply === 'apple') {
+          firmFilters.manufacturer.push(filterWordToApply);
+        } else if (filterWordToApply === 'phone' || filterWordToApply === 'case') {
+          firmFilters.type.push(filterWordToApply);
+        } else if (filterWordToApply === '50' || filterWordToApply === '100' || 
+        filterWordToApply === '200' || filterWordToApply === '500' || filterWordToApply === '600') {
+          firmFilters.price.push(Number(filterWordToApply));
+        }
         createProducts(filterProdsOnScreen(data));
       } else {
-        firmFilters.manufacturer = firmFilters.manufacturer.filter(function(manufVal){return manufVal !== 'samsung'});
+        if(filterWordToApply === 'samsung' || filterWordToApply === 'apple') {
+          firmFilters.manufacturer = firmFilters.manufacturer.filter(function(manufVal){return manufVal !== filterWordToApply});
+        } else if (filterWordToApply === 'phone' || filterWordToApply === 'case') {
+          firmFilters.type = firmFilters.type.filter(function(typeVal){return typeVal !== filterWordToApply});
+        } else if (filterWordToApply === '50' || filterWordToApply === '100' || 
+        filterWordToApply === '200' || filterWordToApply === '500' || filterWordToApply === '600') {
+          firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== Number(filterWordToApply)});
+        }
         createProducts(filterProdsOnScreen(data));
       }
     });
     
-    $('#apple-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#apple-checkbox').is(':checked')){
-        firmFilters.manufacturer.push('apple');
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.manufacturer = firmFilters.manufacturer.filter(function(manufVal){return manufVal !== 'apple'});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#phone-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#phone-checkbox').is(':checked')){
-        firmFilters.type.push('phone');
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.type = firmFilters.type.filter(function(typeVal){return typeVal !== 'phone'});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#case-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#case-checkbox').is(':checked')){
-        firmFilters.type.push('case');
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.type = firmFilters.type.filter(function(typeVal){return typeVal !== 'case'});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#under-50-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#under-50-checkbox').is(':checked')){
-        firmFilters.price.push(50);
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 50});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#under-100-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#under-100-checkbox').is(':checked')){
-        firmFilters.price.push(100);
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 100});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#under-200-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#under-200-checkbox').is(':checked')){
-        firmFilters.price.push(200);
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 200});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#under-500-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#under-500-checkbox').is(':checked')){
-        firmFilters.price.push(500);
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 500});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    $('#under-600-checkbox').on('click', function(event){
-      $('#product-contents-section').empty();
-      if($('#under-600-checkbox').is(':checked')){
-        firmFilters.price.push(600);
-        createProducts(filterProdsOnScreen(data));
-      } else {
-        firmFilters.price = firmFilters.price.filter(function(priceVal){return priceVal !== 600});
-        createProducts(filterProdsOnScreen(data));
-      }
-    });
-    
-    
+    //handles the click event on the clear filters button
     $('#clear-filter-button').on('click', function(event){
       curFiltersApplied = [];
       searchFilters = [];
@@ -499,46 +448,43 @@ $(function () {
     
     /*************************************** Modal for products ***********************************************/
     
-    $('img.product').on('click', function(event){
-      //determine the target, use that to get the image name
-      var newTarget = event.target.attributes[0].nodeValue.replace("thumbs/", "");
-      
-      //set up the modal and put it on the webpage
-      var $modal = $('<div>')
-        .attr('id', 'modalforImg')
-        .attr('class', 'modal');
-      
-      var $span = $('<span>')
-        .attr('class', 'close')
-        .html('&times;');
+    
+    $('#product-contents-section').on('click', function(event){
+      if($(event.target).attr('class') === 'img-responsive') {
+        var newImgOnFs = event.target.attributes[0].nodeValue.replace("thumbs/", "");
         
-      var $img = $('<img>')
-        .attr('class', 'modal-content')
-        .attr('id', 'modal-img')
-        .attr('src', newTarget);
+        //set up the modal and put it on the webpage
+        var $modal = $('<div>')
+          .attr('id', 'modalforImg')
+          .attr('class', 'modal');
+        
+        var $span = $('<span>')
+          .attr('class', 'close')
+          .html('&times;');
+          
+        var $img = $('<img>')
+          .attr('class', 'modal-content')
+          .attr('id', 'modal-img')
+          .attr('src', newImgOnFs);
+        
+        $modal.append($span);
+        $modal.append($img);
+        $modal.appendTo('#product-contents-section');
+        
+        $('.modal').css('display', 'block');
       
-      $modal.append($span);
-      $modal.append($img);
-      $modal.appendTo('#product-contents-section');
-      
-      $('.modal').css('display', 'block');
-    
-      
-      $('.close').on('click', function(event){
-        $('.modal').css('display', 'none');
-        $('.modal').remove();
-      });
-      
-      $('.modal').on('click', function(event){
-        $('.modal').css('display', 'none');
-        $('.modal').remove();
-      });
-      
+        
+        $('.close').on('click', function(event){
+          $('.modal').css('display', 'none');
+          $('.modal').remove();
+        });
+        
+        $('.modal').on('click', function(event){
+          $('.modal').css('display', 'none');
+          $('.modal').remove();
+        });
+      }
     });
-    
-    
-    
-    
     
     
   });
