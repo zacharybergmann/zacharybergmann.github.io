@@ -380,6 +380,7 @@ $(function () {
     //case user clicks to Search! button
     $('#search-button').on('click', function(event){
       var searchFor = $('#search-bar-input').val().trim();
+      searchFilters = [];
       $('#product-contents-section').empty();
       createProducts(filterProdsOnScreen(data, searchFor));
     });
@@ -391,6 +392,7 @@ $(function () {
         //search thru the array prodArray
         //detatch each item that does not meet the description
         var searchFor = $(this).val().trim();
+        searchFilters = [];
         $('#product-contents-section').empty();
         createProducts(filterProdsOnScreen(data, searchFor));
       }
