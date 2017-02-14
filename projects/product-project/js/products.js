@@ -7,9 +7,6 @@ $(function () {
     
     /********************************** Global Variables *********************************************/
     
-    var prodsObjs;
-    var curFiltersApplied = [];
-    var curFirmFilters = [];
     var firmFilters = {
                         type: [],
                         price: [],
@@ -432,7 +429,6 @@ $(function () {
     
     //handles the click event on the clear filters button
     $('#clear-filter-button').on('click', function(event){
-      curFiltersApplied = [];
       searchFilters = [];
       firmFilters = {
                       type: [],
