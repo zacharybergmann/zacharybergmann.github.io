@@ -1,3 +1,10 @@
+body {
+    background: #f2f2f2;
+    background-image: url('../james-bond-background2.jpg');
+    background-repeat: repeat-y;
+    background-size: 100% auto;
+}
+
 #co-info-row {
     padding-top: -30px;
 }
@@ -23,7 +30,7 @@
 
 #nav2 {
     margin-top:-20px;
-    background:#abcafc;
+    background:#5e0606;
     height: 80px;
     padding-left: 20px;
     padding-top: 17px;

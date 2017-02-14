@@ -183,7 +183,8 @@ $(function () {
           .css('max-width', '160px')
           .css('max-height', '160px')
           .css('width', 'auto')
-          .css('height', 'auto');
+          .css('height', 'auto')
+          .css('border-radius', '5%');
         
         $imgDiv.append($thumbnailImg);
         
