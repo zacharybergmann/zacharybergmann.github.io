@@ -3,6 +3,7 @@ body {
     background-image: url('../james-bond-background2.jpg');
     background-repeat: repeat-y;
     background-size: 100% auto;
+    overflow-x: hidden;
 }
 
 #co-name-top {
@@ -33,6 +34,10 @@ body {
     padding-top: 17px;
 }
 
+#search-div-row {
+    width:95%;
+}
+
 #nav2 div.col-xs-7 {
     padding-top: 5px;
 }
@@ -47,10 +52,12 @@ body {
 
 #search-bar-stuff {
     margin-top: 40px;
+    width:100%;
 }
 
 #search-button-stuff {
     margin-top: 45px;
+    width:90%;
 }
 
 #search-bar-button-div {
