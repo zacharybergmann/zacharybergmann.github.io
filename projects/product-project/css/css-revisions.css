@@ -5,10 +5,6 @@ body {
     background-size: 100% auto;
 }
 
-#co-info-row {
-    padding-top: -30px;
-}
-
 #co-name-top {
     text-decoration: none;
     font: 30px arial;
@@ -16,8 +12,9 @@ body {
 }
 
 #co-logo-div {
-    margin-top: 20px;
-    margin-left: 10px;
+    margin-left: 0px;
+    position: absolute;
+    top:0;
 }
 
 #slogan {
@@ -25,7 +22,7 @@ body {
 }
 
 #nav {
-    height: 150px;
+    height: 120px;
 }
 
 #nav2 {
@@ -42,6 +39,10 @@ body {
 
 #shop-cart-icon {
     color: white;
+}
+
+#shop-cart-icon:hover {
+    cursor:pointer;
 }
 
 #search-bar-stuff {
@@ -68,6 +69,10 @@ body {
     border-width: 1px;
     border-color: #ddd;
     padding-left: 10px;
+}
+
+#filter-results-form input:hover {
+    cursor:pointer;
 }
 
 hr {
@@ -117,7 +122,8 @@ hr {
 
 #see-cart-div {
     text-align: right;
-    margin-top:.5em;
+    margin-top:1.5em;
     padding-right: 1.5em;
     height: 20px;
 }
+

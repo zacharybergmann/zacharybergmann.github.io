@@ -204,7 +204,13 @@ $(function () {
         var $h4 = $("<h4>")
           .text(product.desc);
           
+        var $h5Spec = $('<h5>')
+          .text('Specifications')
+          .css('color',  '#808182')
+          .css('text-decoration', 'underline');
+          
         $h4.appendTo($descriptionDiv);
+        $descriptionDiv.append($h5Spec);
         
         $infoDiv.append($descriptionDiv);
         
@@ -322,15 +328,21 @@ $(function () {
           .html("<p style='text-align: right'>" + product.stock + " in stock!" + "<p>");
           
         
+        var $addToCartDiv = $('<div>')
+          .attr('id', 'add-to-cart-div');
+          
+        var $buttonAddToCart = $('<button>')
+          .attr('type', 'button')
+          .attr('id', 'add-to-cart-button')
+          .attr('class', 'btn btn-default')
+          .css('width', '120px')
+          .css('float', 'right')
+          .text('Add to Cart');
+          
+        $addToCartDiv.append($buttonAddToCart);  
         
         
-        
-        
-        
-        
-        
-        
-        var $inStockDiv = $('<div>')
+      
         
         
         $priceDiv.append($priceHead);
@@ -342,7 +354,7 @@ $(function () {
         $priceColorCartDiv.append($cartDiv);
         $priceColorCartDiv.append($qtyDiv);
         $priceColorCartDiv.append($qtyAvail);
-        $priceColorCartDiv.append($cartDiv);
+        $priceColorCartDiv.append($addToCartDiv);
         
         $productWrapperDiv.append($imgDiv);
         $productWrapperDiv.append($infoDiv);
@@ -442,6 +454,19 @@ $(function () {
       createProducts(filterProdsOnScreen(data));
     });
     
+    //handles mouseover and mouseout on the images
+    $('#product-contents-section').on('mouseover mouseout', function(event){
+      if($(event.target).attr('class') === 'img-responsive') {
+        if(event.type === 'mouseover') {
+          $('.img-responsive')
+            .css('cursor', 'pointer');
+        }
+        if($(event.type) === 'mouseout') {
+          $('.img-responsive')
+            .css('cursor', 'arrow');
+        }
+      }
+    });
     
     
     
@@ -464,7 +489,11 @@ $(function () {
         var $img = $('<img>')
           .attr('class', 'modal-content')
           .attr('id', 'modal-img')
-          .attr('src', newImgOnFs);
+          .attr('src', newImgOnFs)
+          .css('position', 'absolute')
+          .css('top', '50%')
+          .css('left', '50%')
+          .css('transform', 'translate(-50%,-50%)');
         
         $modal.append($span);
         $modal.append($img);
